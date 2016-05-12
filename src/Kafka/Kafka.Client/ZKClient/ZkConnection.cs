@@ -39,91 +39,91 @@
             this._sessionTimeOut = sessionTimeOut;
         }
 
-        public void Connect(IWatcher watcher) 
+        public void Connect(IWatcher watcher)
         {
             Monitor.Enter(this._zookeeperLock);
-            try 
+            try
             {
-                if (this._zk != null) 
+                if (this._zk != null)
                 {
                     throw new Exception("zk client has already been started");
                 }
 
-                try 
+                try
                 {
                     Logger.Debug("Creating new ZookKeeper instance to connect to " + this._servers + ".");
                     this._zk = new ZooKeeper(this._servers, this._sessionTimeOut, watcher);
-                } 
-                catch (Exception e) 
+                }
+                catch (Exception e)
                 {
                     throw new ZkException("Unable to connect to " + this._servers, e);
                 }
-            } 
-            finally 
+            }
+            finally
             {
                 Monitor.Exit(this._zookeeperLock);
             }
         }
 
-        public void Dispose() 
+        public void Dispose()
         {
             Monitor.Enter(this._zookeeperLock);
-            try 
+            try
             {
-                if (this._zk != null) 
+                if (this._zk != null)
                 {
                     Logger.Debug("Closing ZooKeeper connected to " + this._servers);
                     this._zk.Dispose();
                     this._zk = null;
                 }
-            } 
-            finally 
+            }
+            finally
             {
                 Monitor.Exit(this._zookeeperLock);
             }
         }
 
-        public string Create(string path, byte[] data, CreateMode mode) 
+        public string Create(string path, byte[] data, CreateMode mode)
         {
             return this._zk.Create(path, data, Ids.OPEN_ACL_UNSAFE, mode);
         }
 
-        public void Delete(string path) 
+        public void Delete(string path)
         {
             this._zk.Delete(path, -1);
         }
 
-        public bool Exists(string path, bool watch) 
+        public bool Exists(string path, bool watch)
         {
             return this._zk.Exists(path, watch) != null;
         }
 
-        public List<string> GetChildren(string path, bool watch) 
+        public IEnumerable<string> GetChildren(string path, bool watch)
         {
             return this._zk.GetChildren(path, watch);
         }
 
-        public byte[] ReadData(string path, Stat stat, bool watch) 
+        public byte[] ReadData(string path, Stat stat, bool watch)
         {
             return this._zk.GetData(path, watch, stat);
         }
 
-        public void WriteData(string path, byte[] data) 
+        public void WriteData(string path, byte[] data)
         {
             this.WriteData(path, data, -1);
         }
 
-        public void WriteData(string path, byte[] data, int version) 
+        public void WriteData(string path, byte[] data, int version)
         {
             this._zk.SetData(path, data, version);
         }
 
-        public Stat WriteDataReturnStat(string path, byte[] data, int version) 
+        public Stat WriteDataReturnStat(string path, byte[] data, int version)
         {
             return this._zk.SetData(path, data, version);
         }
 
-        public ZooKeeper.States ZookeeperState 
+        public ZooKeeper.States ZookeeperState
         {
             get
             {
@@ -131,7 +131,7 @@
             }
         }
 
-        public ZooKeeper Zookeeper 
+        public ZooKeeper Zookeeper
         {
             get
             {
@@ -139,7 +139,7 @@
             }
         }
 
-        public long GetCreateTime(string path) 
+        public long GetCreateTime(string path)
         {
             var stat = this._zk.Exists(path, false);
             if (stat != null)
@@ -150,7 +150,7 @@
             return -1;
         }
 
-        public string Servers 
+        public string Servers
         {
             get
             {

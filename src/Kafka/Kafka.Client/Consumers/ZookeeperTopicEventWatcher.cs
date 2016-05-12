@@ -1,4 +1,6 @@
-﻿namespace Kafka.Client.Consumers
+﻿using System.Linq;
+
+namespace Kafka.Client.Consumers
 {
     using System;
     using System.Collections.Generic;
@@ -79,7 +81,7 @@
                     {
                         if (this.parent.zkClient != null)
                         {
-                            var latestTopics = this.parent.zkClient.GetChildren(ZkUtils.BrokerTopicsPath);
+                            var latestTopics = this.parent.zkClient.GetChildren(ZkUtils.BrokerTopicsPath).ToList();
                             Logger.DebugFormat("all topics: {0}", string.Join(", ", latestTopics));
                             this.parent.eventHandler.HandleTopicEvent(latestTopics);
                         }

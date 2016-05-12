@@ -1,4 +1,6 @@
-﻿namespace Kafka.Client.ZKClient
+﻿using System.Linq;
+
+namespace Kafka.Client.ZKClient
 {
     using System;
     using System.Collections.Concurrent;
@@ -368,12 +370,12 @@
             }
         }
 
-        public List<string> GetChildren(string path)
+        public IEnumerable<string> GetChildren(string path)
         {
             return this.GetChildren(path, this.HasListeners(path));
         }
 
-        protected List<string> GetChildren(string path, bool watch)
+        protected IEnumerable<string> GetChildren(string path, bool watch)
         {
             return RetryUntilConnected(() => _connection.GetChildren(path, watch));
         }
@@ -387,7 +389,7 @@
         {
             try
             {
-                return GetChildren(path).Count;
+                return GetChildren(path).ToList().Count;
             }
             catch (ZkNoNodeException)
             {
@@ -479,7 +481,7 @@
             List<String> children;
             try
             {
-                children = GetChildren(path, false);
+                children = GetChildren(path, false).ToList();
             }
             catch (ZkNoNodeException)
             {
@@ -561,7 +563,7 @@
                                 {
                                     // if the node doesn't exist we should listen for the root node to reappear
                                     Exists(path);
-                                    var children = this.GetChildren(path);
+                                    var children = this.GetChildren(path).ToList();
                                     listener.HandleChildChange(path, children);
                                 }
                                 catch (ZkNoNodeException)
@@ -851,7 +853,7 @@
                     Exists(path, true);
                     try
                     {
-                        return GetChildren(path, true);
+                        return GetChildren(path, true).ToList();
                     }
                     catch (ZkNoNodeException)
                     {
@@ -954,7 +956,7 @@
             EventLock.Lock();
             try
             {
-                _connection.Dispose(); 
+                _connection.Dispose();
                 _connection.Connect(this);
             }
             catch (ThreadInterruptedException e)

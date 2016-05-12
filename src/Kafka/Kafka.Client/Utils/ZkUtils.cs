@@ -22,7 +22,7 @@
     using Newtonsoft.Json.Linq;
 
     using Org.Apache.Zookeeper.Data;
-    
+
     public static class ZkUtils
     {
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -80,7 +80,7 @@
         public static List<int> GetSortedBrokerList(ZkClient zkClient)
         {
             return GetChildren(zkClient, BrokerIdsPath).Select(int.Parse).OrderBy(x => x).ToList();
-        } 
+        }
 
         public static List<Broker> GetAllBrokersInCluster(ZkClient zkClient)
         {
@@ -365,14 +365,14 @@
 
         public static List<string> GetChildren(ZkClient zkClient, string path)
         {
-            return zkClient.GetChildren(path);
-        } 
+            return zkClient.GetChildren(path).ToList();
+        }
 
         public static IList<string> GetChildrenParentMayNotExist(ZkClient client, string path)
         {
             try
             {
-                return client.GetChildren(path);
+                return client.GetChildren(path).ToList();
             }
             catch (ZkNoNodeException)
             {

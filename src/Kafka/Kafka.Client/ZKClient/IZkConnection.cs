@@ -1,4 +1,6 @@
-﻿namespace Kafka.Client.ZKClient
+﻿using Kafka.Client.Cfg.Elements;
+
+namespace Kafka.Client.ZKClient
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +19,7 @@
 
         bool Exists(string path, bool watch);
 
-        List<string> GetChildren(string path, bool watch);
+        IEnumerable<string> GetChildren(string path, bool watch);
 
         byte[] ReadData(string path, Stat stat, bool watch);
 

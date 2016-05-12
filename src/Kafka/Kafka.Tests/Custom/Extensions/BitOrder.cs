@@ -1,8 +1,8 @@
-﻿namespace Kafka.Tests.Custom.Extensions
+﻿using Xunit;
+
+namespace Kafka.Tests.Custom.Extensions
 {
     using Kafka.Client.Common.Imported;
-
-    using Xunit;
 
     public class BitOrder
     {
